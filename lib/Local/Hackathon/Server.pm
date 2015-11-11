@@ -31,6 +31,8 @@ use strict;
 use warnings;
 
 use Local::Hackathon::Const;
+use Local::Hackathon::Storage;
+
 use Mouse;
 
 use Socket;
@@ -57,7 +59,11 @@ sub run {
 	) or die "Can't listen to @{[ $self->port ]}: $!\n";
 
 	$self->socket($socket);
-	$self->storage(Local::Hackathon::Storage->new());
+
+	$self->storage(Local::Hackathon::Storage->new(
+		storage_dir => './storage',
+	)) or die "Can't create storage!\n";
+
 	my @pids;
 
 	$SIG{TERM} = $SIG{INT} = sub {
@@ -93,8 +99,8 @@ sub child {
 		$client->autoflush(1);
 		my $peer = getpeername($client) or next;
 		my ($port,$addr) = Socket::unpack_sockaddr_in( $peer );
-		my $client_id = "$addr:$port";
 		$addr = Socket::inet_ntoa($addr);
+		my $client_id = "$addr:$port";
 		print "Client $client_id connected\n";
 
 		while () {
