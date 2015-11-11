@@ -1,28 +1,28 @@
-package Local::Hackathon::FakeStorage;
+# package Local::Hackathon::FakeStorage;
 
-use Mouse;
-use JSON::XS;
-use Digest::MD5 qw(md5_hex);
+# use Mouse;
+# use JSON::XS;
+# use Digest::MD5 qw(md5_hex);
 
-has 'storage', is => 'ro', default => sub {+{}};
+# has 'storage', is => 'ro', default => sub {+{}};
 
-our $JSON = JSON::XS->new->utf8->pretty->allow_nonref;
+# our $JSON = JSON::XS->new->utf8->pretty->allow_nonref;
 
-sub put {
-	my $self = shift;
-	my $chan = shift;
-	my $ref = shift;
-	my $data = $JSON->encode($ref);
-	my $id = md5_hex $data;
+# sub put {
+# 	my $self = shift;
+# 	my $chan = shift;
+# 	my $ref = shift;
+# 	my $data = $JSON->encode($ref);
+# 	my $id = md5_hex $data;
 
-	if (exists $self->{storage}{$chan}{$id}) {
-		return "Task already exists";
-	}
-	else {
-		$self->{storage}{$chan}{$id} = $data;
-		return { id => $id };
-	}
-}
+# 	if (exists $self->{storage}{$chan}{$id}) {
+# 		return "Task already exists";
+# 	}
+# 	else {
+# 		$self->{storage}{$chan}{$id} = $data;
+# 		return { id => $id };
+# 	}
+# }
 
 package Local::Hackathon::Server;
 
@@ -57,7 +57,7 @@ sub run {
 	) or die "Can't listen to @{[ $self->port ]}: $!\n";
 
 	$self->socket($socket);
-	$self->storage(Local::Hackathon::FakeStorage->new());
+	$self->storage(Local::Hackathon::Storage->new());
 	my @pids;
 
 	$SIG{TERM} = $SIG{INT} = sub {
@@ -143,6 +143,19 @@ sub child {
 					1} or do {
 						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("$@"));
 					};
+				}
+				when (PKT_TAKE) {
+					p $data;
+					my $res = $self->storage->take(@$data);
+				}
+				when (PKT_ACK) {
+					p $data;
+				}
+				when (PKT_RELEASE) {
+					p $data;
+				}
+				when (PKT_REQUEUE) {
+					p $data;
 				}
 				default {
 					syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("Not implemented packet type $PACKETS{$pkt}"));
