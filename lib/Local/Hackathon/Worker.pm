@@ -36,17 +36,17 @@ sub run {
 			sleep 1;
 			next;
 		}
-		p $data;
+		#p $data;
 		my $id = $data->{id};
 		my $task = $data->{task};
-		p $task;
+		#p $task;
 		eval {
 			my $newtask = $self->process($task);
 
 			warn "Doing requeue";
 			my $req = $self->client->requeue( $id, $self->destination, $newtask );
 
-			p $req;
+			#p $req;
 
 		1} or do {
 			my $err = "$@";
@@ -55,13 +55,6 @@ sub run {
 		};
 		$working = 0;
 	}
-}
-
-sub process {
-	my $self = shift;
-	my $task = shift;
-	# ...
-	return $task;
 }
 
 1;

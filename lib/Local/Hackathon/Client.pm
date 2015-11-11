@@ -106,7 +106,7 @@ sub request {
 		croak "Server reset connection ($rd/$len): $!";
 	}
 
-	# p $buf;
+	#p $buf;
 
 	my $data;
 	eval {
@@ -114,6 +114,7 @@ sub request {
 	1} or do {
 		croak "Failed to decode response JSON: $@";
 	};
+	#warn $data;
 
 	if (ref $data) {
 		return $data;
