@@ -12,7 +12,7 @@ sub process {
 	my $dom = Mojo::DOM->new($task->{'HTML'});
 	my @t;
 	$dom->find('img')->map(attr => 'src')->each(sub {
-		push @t,$_[0];
+		push @t,$_[0] if length $_[0];
 	});
 	$task->{'images'}= \@t;
 	return $task;

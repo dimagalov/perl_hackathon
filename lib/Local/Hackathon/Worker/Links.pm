@@ -12,10 +12,10 @@ sub process {
 	my $dom = Mojo::DOM->new($task->{'HTML'});
 	my @t;
 	$dom->find('a')->map(attr => 'href')->each(sub {
-		push @t,$_[0];
+		push @t,$_[0] if length $_[0];
 	});
 	#p @t;
-	$task->{'images'}= \@t;
+	$task->{'links'}= \@t;
 	return $task;
 }
 
