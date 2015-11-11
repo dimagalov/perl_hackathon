@@ -142,7 +142,9 @@ sub take {
 }
 
 sub ack {
-	...
+	my $self = shift;
+    my ($channel) = @_;
+    return $self->request(PKT_ACK, [ $channel ]);
 }
 
 sub release {

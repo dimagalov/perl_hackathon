@@ -3,7 +3,8 @@ package Local::Hackathon::Worker::Fetcher;
 use Mouse::Role;
 use LWP::Simple;
 use DDP;
-use 5.018;
+use feature "say";
+# use 5.018;
 
 has '+source',       default => 'fetch';
 has '+destination',  default => 'og';
