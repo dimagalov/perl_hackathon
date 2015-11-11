@@ -1,7 +1,6 @@
 package Local::Hackathon::Worker::Links;
 use Mojo::DOM;
 use Data::Dumper;
-use json::xs;
 
 use Mouse::Role;
 
@@ -11,15 +10,14 @@ has '+destination',  default => 'images';
 
 sub process { 
 
-my %input=take(source);
+my ($self, $task)=@_;
 
-my $dom = Mojo::DOM->new($input->HTML);
+my $dom = Mojo::DOM->new($task->{'HTML'});
 
 my @t = $dom->find('a')->map(attr => 'href');
 
-$input{'links'}= @t; 
-put(destination, \%input);
-
+$task->{'links'}= @t; 
+return $task;
 }
 
 1;
