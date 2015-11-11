@@ -152,6 +152,10 @@ sub child {
 				}
 				when (PKT_TAKE) {
 					p $data;
+					if (ref $data ne 'ARRAY') {
+						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("Wrong arguments format"));
+						next;
+					}
 					eval {
 						my $res = $self->storage->take(@$data);
 						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode($res));
@@ -161,6 +165,10 @@ sub child {
 				}
 				when (PKT_ACK) {
 					p $data;
+					if (ref $data ne 'ARRAY') {
+						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("Wrong arguments format"));
+						next;
+					}
 					eval {
 						my $res = $self->storage->ack(@$data);
 						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode($res));
@@ -170,6 +178,10 @@ sub child {
 				}
 				when (PKT_RELEASE) {
 					p $data;
+					if (ref $data ne 'ARRAY') {
+						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("Wrong arguments format"));
+						next;
+					}
 					eval {
 						my $res = $self->storage->release(@$data);
 						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode($res));
@@ -179,6 +191,10 @@ sub child {
 				}
 				when (PKT_REQUEUE) {
 					p $data;
+					if (ref $data ne 'ARRAY') {
+						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("Wrong arguments format"));
+						next;
+					}
 					eval {
 						my $res = $self->storage->requeue(@$data);
 						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode($res));
