@@ -1,7 +1,6 @@
 package Local::Hackathon::Worker::Links;
 use Mojo::DOM;
 use Data::Dumper;
-use json::xs;
 
 use Mouse::Role;
 
@@ -11,16 +10,15 @@ has '+destination',  default => 'comments';
 
 sub process {
 
-	my %input=take(source);
 
-	my $dom = Mojo::DOM->new($input->HTML);
+my ($self, $task)=@_;
 
-	my @t = $dom->find('img')->map(attr => 'src');
+my $dom = Mojo::DOM->new($task->{'HTML'});
 
-	$input{'images'}= @t; 
+my @t = $dom->find('img')->map(attr => 'src');
 
-	put(destination, \%input);
-
+$task->{'images'}= @t; 
+return $task;
 }
 
 1;
