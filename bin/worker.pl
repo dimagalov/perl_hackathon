@@ -1,12 +1,13 @@
 #!/usr/bin/env perl
 
 use strict;
-use lib::abs '../lib';
+# use lib::abs '../lib';
+use lib "./lib";
 use Getopt::Long;
 use DDP;
 
 #BEGIN{GetOptions}
-use Local::Hackathon::Worker shift;
+use Local::Hackathon::Worker $ARGV[0];
 my $host = '192.168.0.65';
 my $port = '3456';
 # p @ARGV;
