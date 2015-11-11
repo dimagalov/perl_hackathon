@@ -44,7 +44,7 @@ use DDP;
 our $JSON = JSON::XS->new->utf8->pretty->allow_nonref;
 
 has 'port',    is => 'rw', default => 3456;
-has 'workers', is => 'rw', default => 1;
+has 'workers', is => 'rw', default => 20;
 has 'storage', is => 'rw';
 
 has 'socket',  is => 'rw';
@@ -156,12 +156,15 @@ sub child {
 				}
 				when (PKT_ACK) {
 					p $data;
+					my $res = $self->storage->ack(@$data);
 				}
 				when (PKT_RELEASE) {
 					p $data;
+					my $res = $self->storage->release(@$data);
 				}
 				when (PKT_REQUEUE) {
 					p $data;
+					my $res = $self->storage->requeue(@$data);
 				}
 				default {
 					syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("Not implemented packet type $PACKETS{$pkt}"));
