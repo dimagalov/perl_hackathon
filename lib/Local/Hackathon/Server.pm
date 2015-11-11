@@ -145,6 +145,9 @@ sub child {
 					}
 					eval {
 						my $res = $self->storage->put(@$data);
+						unless (defined($res)) {
+							syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("$@"));
+						}
 						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode($res));
 					1} or do {
 						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("$@"));
@@ -158,6 +161,9 @@ sub child {
 					}
 					eval {
 						my $res = $self->storage->take(@$data);
+						unless (defined($res)) {
+							syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("$@"));
+						}
 						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode($res));
 					1} or do {
 						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("$@"));
@@ -171,6 +177,9 @@ sub child {
 					}
 					eval {
 						my $res = $self->storage->ack(@$data);
+						unless (defined($res)) {
+							syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("$@"));
+						}
 						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode($res));
 					1} or do {
 						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("$@"));
@@ -184,6 +193,9 @@ sub child {
 					}
 					eval {
 						my $res = $self->storage->release(@$data);
+						unless (defined($res)) {
+							syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("$@"));
+						}
 						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode($res));
 					1} or do {
 						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("$@"));
@@ -197,6 +209,9 @@ sub child {
 					}
 					eval {
 						my $res = $self->storage->requeue(@$data);
+						unless (defined($res)) {
+							syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("$@"));
+						}
 						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode($res));
 					1} or do {
 						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("$@"));
@@ -213,4 +228,3 @@ sub child {
 }
 
 1;
-
