@@ -152,19 +152,39 @@ sub child {
 				}
 				when (PKT_TAKE) {
 					p $data;
-					my $res = $self->storage->take(@$data);
+					eval {
+						my $res = $self->storage->take(@$data);
+						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode($res));
+					1} or do {
+						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("$@"));
+					};
 				}
 				when (PKT_ACK) {
 					p $data;
-					my $res = $self->storage->ack(@$data);
+					eval {
+						my $res = $self->storage->ack(@$data);
+						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode($res));
+					1} or do {
+						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("$@"));
+					};
 				}
 				when (PKT_RELEASE) {
 					p $data;
-					my $res = $self->storage->release(@$data);
+					eval {
+						my $res = $self->storage->release(@$data);
+						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode($res));
+					1} or do {
+						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("$@"));
+					};
 				}
 				when (PKT_REQUEUE) {
 					p $data;
-					my $res = $self->storage->requeue(@$data);
+					eval {
+						my $res = $self->storage->requeue(@$data);
+						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode($res));
+					1} or do {
+						syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("$@"));
+					};
 				}
 				default {
 					syswrite $client, pack ("VVV/a*", $pkt, $id, $JSON->encode("Not implemented packet type $PACKETS{$pkt}"));
